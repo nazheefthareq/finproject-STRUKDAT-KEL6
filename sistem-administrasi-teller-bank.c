@@ -52,7 +52,7 @@ int main () {
     int choice, id;
     char nama[50];
 
-    printf("Selamat Datang di Sistem Administrasi Teller Bank Karomah\n");
+    printf("Selamat Datang di Sistem Administrasi Teller Bank Sejahtera\n");
 
     do {
         printf("\n===== OPSI MENU ADMINISTRASI =====\n");
