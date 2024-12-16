@@ -9,6 +9,14 @@ typedef struct Node {
     struct Node*next; // Pointer untuk ke Node berikutnya
 } Node;
 
+// definisi struct untuk Node double-linkedlist Nasabah kemarin
+typedef struct DoubleNode {
+    int id;
+    char nama[50];
+    struct DoubleNode *prev;
+    struct DoubleNode *next;
+} DoubleNode;
+
 // definisi struct untuk Queue
 typedef struct Queue {
     Node*front;
@@ -28,26 +36,43 @@ Node* createNode (int id, char* nama) {
     newNode -> next = NULL;
 
     return newNode;
-}
+} 
 
 // fungsi initQueue
+void initQueue(Queue *q) {
+    q->front = NULL;
+    q->rear = NULL;
+}
 
 // fungsi enQueue - tambahkan Nasabah
+void enQueue(Queue *q, int id, char *nama) {
+    Node *newNode = createNode(id, nama);
+    if (q->rear == NULL) {
+        q->front = q->rear = newNode;
+    } else {
+        q->rear->next = newNode;
+        q->rear = newNode;
+    }
+    printf("Nasabah dengan ID %d dan nama %s telah ditambahkan ke antrian.\n", id, nama);
+}
 
-// fungsi deQueue - Nasabah selesai dilayani
+// fungsi deQueue - Nasabah selesai dilayani 
 
 // fungsi printQueue - tampilkan antrian Nasabah
 
 // fungsi initStack
 
-// fungsi push Stack - 
+// fungsi push Stack - memasukkan Nasabah yang selesai dilayani ke Stack
 
-// fungsi pop Stack
+// fungsi pop Stack - menghapus data Nasabah yang selesai dilayani dari Stack
 
-// fungsi printStack
+// fungsi printStack - menampilkan data Nasabah yang selesai dilayani hari ini
+
+// data statis double-linkedlist untuk menyimpan data Nasabah kemarin.
 
 // fungsi main
 int main () {
+    Queue q;
     
     int choice, id;
     char nama[50];
@@ -63,30 +88,38 @@ int main () {
         printf("5. Hapus riwayat pelayanan\n");
         printf("6. Keluar\n");
         printf("Silahkan masukkan pilihan Anda: ");
-        scanf("%d", choice);
+        scanf("%d", &choice);
+        getchar();
 
         switch (choice) {
             case 1:
                 printf("Masukkan ID Nasabah: ");
-                scanf("%d", id);
+                scanf("%d", &id);
+                getchar(); // menangkap newline setelah scanf
                 printf("Masukkan Nama Nasabah: ");
-                scanf("%[^\n]s", nama);
-            //enqueue
+                fgets(nama, sizeof(nama), stdin);
+                nama[strcspn(nama, "\n")] = 0; // menghapus newline di akhir input
+                enQueue(&q, id, nama);
             break;
 
-            case 2:
+            case 2: // Iqbal
                 // dequeue + push stack
             break;
 
-            case 3:
+            case 3: // Wildan
                 // print queue
             break;
 
-            case 4:
+            case 4: // Tsabit
+                printf ("Silahkan pilih riwayat transaksi yang ingin ditampilkan:\n");
+                // Case
+                    // case 1 : Hari ini (Stack)
+                    // case 2 : Kemarin (Double Linked List)
+                    // case 3 : Semua di urutkan dari hari ini sebagai yang paling atas(Double Linked List)
                 // printstack
             break;
 
-            case 5:
+            case 5: // Rama
                 // pop stack
             break;
 
