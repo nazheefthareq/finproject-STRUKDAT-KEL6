@@ -94,7 +94,19 @@ void push(Stack *s, Node *nasabah) {
     }
 
 // fungsi pop Stack - menghapus data Nasabah yang selesai dilayani dari Stack
-
+node* pop(stack *s){
+    if(s-> top == NULL){
+        printf("Riwayat pelayanan kosong. \n");
+        return NULL;
+    }
+    Node* temp = s ->top;
+    s->top = s->top->next;
+    temp->next = NULL;
+    printf("Nasabah dengan ID %d dan nama %s dihapus dari riwayat pelayanan (Stack).\n", temp->id, temp->nama);
+    free(temp);
+    return temp;
+}
+    
 // fungsi printStack - menampilkan data Nasabah yang selesai dilayani hari ini
 
 // data statis double-linkedlist untuk menyimpan data Nasabah kemarin.
@@ -102,7 +114,8 @@ void push(Stack *s, Node *nasabah) {
 // fungsi main
 int main () {
     Queue q;
-    
+    Stack s; 
+	initStack(&s);
     int choice, id;
     char nama[50];
 
@@ -154,6 +167,7 @@ int main () {
 
             case 5: // Rama
                 // pop stack
+                pop(&s);
             break;
 
             case 6:
