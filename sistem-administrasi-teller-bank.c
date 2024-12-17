@@ -94,7 +94,7 @@ void push(Stack *s, Node *nasabah) {
     }
 
 // fungsi pop Stack - menghapus data Nasabah yang selesai dilayani dari Stack
-node* pop(stack *s){
+Node* pop(stack *s){
     if(s-> top == NULL){
         printf("Riwayat pelayanan kosong. \n");
         return NULL;
