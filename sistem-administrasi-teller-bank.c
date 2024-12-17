@@ -28,15 +28,39 @@ typedef struct Stack {
     Node*top;
 } Stack;
 
+// Data statis untuk double-linkedlist Nasabah kemarin
+DoubleNode* initStaticDoubleLinkedList() {
+    DoubleNode* head = NULL;
+    DoubleNode* tail = NULL;
+    int staticData[3] = {101, 102, 103};
+    char* staticNames[3] = {"Ali", "Budi", "Citra"};
+
+    for (int i = 0; i < 3; i++) {
+        DoubleNode* newNode = (DoubleNode*)malloc(sizeof(DoubleNode));
+        newNode->id = staticData[i];
+        strcpy(newNode->nama, staticNames[i]);
+        newNode->next = NULL;
+        newNode->prev = tail;
+
+        if (tail != NULL) {
+            tail->next = newNode;
+        } else {
+            head = newNode; // First node
+        }
+        tail = newNode;
+    }
+    return head;
+}
+
 // fungsi untuk membuat Node baru
-Node* createNode (int id, char* nama) {
-    Node *newNode = (Node*)malloc(sizeof(Node));
-    newNode -> id = id;
-    strcpy(newNode -> nama, nama);
-    newNode -> next = NULL;
+Node* createNode(int id, char* nama) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->id = id;
+    strcpy(newNode->nama, nama);
+    newNode->next = NULL;
 
     return newNode;
-} 
+}
 
 // fungsi initQueue
 void initQueue(Queue *q) {
@@ -56,7 +80,7 @@ void enQueue(Queue *q, int id, char *nama) {
     printf("Nasabah dengan ID %d dan nama %s telah ditambahkan ke antrian.\n", id, nama);
 }
 
-// fungsi deQueue - Nasabah selesai dilayani 
+// fungsi deQueue - Nasabah selesai dilayani
 Node* deQueue(Queue *q) {
     if (q->front == NULL) {
         printf("Antrian kosong. Tidak ada Nasabah yang dilayani.\n");
@@ -76,13 +100,25 @@ Node* deQueue(Queue *q) {
 }
 
 // fungsi printQueue - tampilkan antrian Nasabah
+void printQueue(Queue *q) {
+    if (q->front == NULL) {
+        printf("Antrian kosong.\n");
+        return;
+    }
+    Node* temp = q->front;
+    printf("Daftar antrian Nasabah:\n");
+    while (temp != NULL) {
+        printf("ID: %d, Nama: %s\n", temp->id, temp->nama);
+        temp = temp->next;
+    }
+}
 
 // fungsi initStack
 void initStack(Stack *s) {
     s->top = NULL;
-    }
+}
 
-// fungsi push Stack - memasukkan Nasabah yang selesai dilayani ke Stack
+// fungsi push Stack
 void push(Stack *s, Node *nasabah) {
     if (nasabah == NULL) {
         return;
@@ -91,31 +127,59 @@ void push(Stack *s, Node *nasabah) {
     nasabah->next = s->top;
     s->top = nasabah;
     printf("Nasabah dengan ID %d dan nama %s telah ditambahkan ke riwayat pelayanan (Stack).\n", nasabah->id, nasabah->nama);
-    }
+}
 
-// fungsi pop Stack - menghapus data Nasabah yang selesai dilayani dari Stack
-node* pop(stack *s){
-    if(s-> top == NULL){
-        printf("Riwayat pelayanan kosong. \n");
+// fungsi pop Stack
+Node* pop(Stack *s) {
+    if (s->top == NULL) {
+        printf("Riwayat pelayanan kosong.\n");
         return NULL;
     }
-    Node* temp = s ->top;
+    Node* temp = s->top;
     s->top = s->top->next;
     temp->next = NULL;
     printf("Nasabah dengan ID %d dan nama %s dihapus dari riwayat pelayanan (Stack).\n", temp->id, temp->nama);
     free(temp);
     return temp;
 }
-    
-// fungsi printStack - menampilkan data Nasabah yang selesai dilayani hari ini
 
-// data statis double-linkedlist untuk menyimpan data Nasabah kemarin.
+// fungsi printStack - tampilkan data Stack
+void printStack(Stack *s) {
+    if (s->top == NULL) {
+        printf("Riwayat pelayanan kosong.\n");
+        return;
+    }
+    Node* temp = s->top;
+    printf("Riwayat pelayanan Nasabah hari ini:\n");
+    while (temp != NULL) {
+        printf("ID: %d, Nama: %s\n", temp->id, temp->nama);
+        temp = temp->next;
+    }
+}
+
+// fungsi printDoubleLinkedList - tampilkan riwayat kemarin
+void printDoubleLinkedList(DoubleNode* head) {
+    if (head == NULL) {
+        printf("Riwayat Nasabah kemarin kosong.\n");
+        return;
+    }
+    DoubleNode* temp = head;
+    printf("Riwayat Nasabah kemarin:\n");
+    while (temp != NULL) {
+        printf("ID: %d, Nama: %s\n", temp->id, temp->nama);
+        temp = temp->next;
+    }
+}
 
 // fungsi main
-int main () {
+int main() {
     Queue q;
-    Stack s; 
-	initStack(&s);
+    Stack s;
+    DoubleNode* kemarin = initStaticDoubleLinkedList(); // Data statis Nasabah kemarin
+
+    initQueue(&q);
+    initStack(&s);
+
     int choice, id;
     char nama[50];
 
@@ -134,51 +198,59 @@ int main () {
         getchar();
 
         switch (choice) {
-            case 1:{
+            case 1: {
                 printf("Masukkan ID Nasabah: ");
                 scanf("%d", &id);
-                getchar(); // menangkap newline setelah scanf
+                getchar();
                 printf("Masukkan Nama Nasabah: ");
                 fgets(nama, sizeof(nama), stdin);
-                nama[strcspn(nama, "\n")] = 0; // menghapus newline di akhir input
+                nama[strcspn(nama, "\n")] = 0;
                 enQueue(&q, id, nama);
-            break;
-            }
-
-            case 2: {// Iqbal
-                // dequeue + push stack
-                Node* nasabahDilayani = deQueue(&q); // Untuk mengambil nasabah dari antrian
-                push(&s, nasabahDilayani);           // Masukkan nasabah yang sudah dilayani ke stack
                 break;
             }
+            case 2: {//Iqbal
+                Node* nasabahDilayani = deQueue(&q);
+                push(&s, nasabahDilayani);
+                break;
+            }
+            case 3:
+                printQueue(&q);
+                break;
+            case 4: //tsabit
+                {
+                int riwayatPilihan;
+                printf("Silahkan pilih riwayat transaksi yang ingin ditampilkan:\n");
+                printf("1. Hari ini (Stack)\n");
+                printf("2. Kemarin (Double Linked List)\n");
+                printf("3. Semua Riwayat\n");
+                scanf("%d", &riwayatPilihan);
 
-            case 3: // Wildan
-                // print queue
-            break;
-
-            case 4: // Tsabit
-                printf ("Silahkan pilih riwayat transaksi yang ingin ditampilkan:\n");
-                // Case
-                    // case 1 : Hari ini (Stack)
-                    // case 2 : Kemarin (Double Linked List)
-                    // case 3 : Semua di urutkan dari hari ini sebagai yang paling atas(Double Linked List)
-                // printstack
-            break;
-
-            case 5: // Rama
-                // pop stack
+                switch (riwayatPilihan) {
+                    case 1:
+                        printStack(&s);
+                        break;
+                    case 2:
+                        printDoubleLinkedList(kemarin);
+                        break;
+                    case 3:
+                        printStack(&s);
+                        printDoubleLinkedList(kemarin);
+                        break;
+                    default:
+                        printf("Pilihan tidak valid!\n");
+                }
+                break;
+            }
+            case 5: // rama
                 pop(&s);
-            break;
-
+                break;
             case 6:
-                printf ("Terimakasih telah menggunakan sistem administrasi Teller\n");
-            break;
-
+                printf("Terimakasih telah menggunakan sistem administrasi Teller\n");
+                break;
             default:
-                printf("Pilihan tidak ada dalam opsi!//INVALID//\n)");
+                printf("Pilihan tidak ada dalam opsi! //INVALID//\n");
         }
-    } while (choice!=6);
-    
-    
+    } while (choice != 6);
+
     return 0;
 }
