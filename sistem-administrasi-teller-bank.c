@@ -1,31 +1,32 @@
+#include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 // definisi struct untuk Node linkedlist Nasabah
 typedef struct Node {
-    int id; // ID Nasabah
-    char nama[50]; // Nama Nasabah
-    struct Node*next; // Pointer untuk ke Node berikutnya
+    int id;             // ID Nasabah
+    char nama[50];      // Nama Nasabah
+    struct Node* next;  // Pointer untuk ke Node berikutnya
 } Node;
 
 // definisi struct untuk Node double-linkedlist Nasabah kemarin
 typedef struct DoubleNode {
     int id;
     char nama[50];
-    struct DoubleNode *prev;
-    struct DoubleNode *next;
+    struct DoubleNode* prev;
+    struct DoubleNode* next;
 } DoubleNode;
 
 // definisi struct untuk Queue
 typedef struct Queue {
-    Node*front;
-    Node*rear;
+    Node* front;
+    Node* rear;
 } Queue;
 
 // definisi struct untuk Stack
 typedef struct Stack {
-    Node*top;
+    Node* top;
 } Stack;
 
 // Data statis untuk double-linkedlist Nasabah kemarin
@@ -33,7 +34,7 @@ DoubleNode* initStaticDoubleLinkedList() {
     DoubleNode* head = NULL;
     DoubleNode* tail = NULL;
     int staticData[3] = {101, 102, 103};
-    char* staticNames[3] = {"Ali", "Budi", "Citra"};
+    char* staticNames[3] = {"Adam", "Bryan", "Chelsea"};
 
     for (int i = 0; i < 3; i++) {
         DoubleNode* newNode = (DoubleNode*)malloc(sizeof(DoubleNode));
@@ -45,7 +46,7 @@ DoubleNode* initStaticDoubleLinkedList() {
         if (tail != NULL) {
             tail->next = newNode;
         } else {
-            head = newNode; // First node
+            head = newNode;  // First node
         }
         tail = newNode;
     }
@@ -63,35 +64,35 @@ Node* createNode(int id, char* nama) {
 }
 
 // fungsi initQueue
-void initQueue(Queue *q) {
-    q->front = NULL;
-    q->rear = NULL;
+void initQueue(Queue* queue) {
+    queue->front = NULL;
+    queue->rear = NULL;
 }
 
 // fungsi enQueue - tambahkan Nasabah
-void enQueue(Queue *q, int id, char *nama) {
-    Node *newNode = createNode(id, nama);
-    if (q->rear == NULL) {
-        q->front = q->rear = newNode;
+void enQueue(Queue* queue, int id, char* nama) {
+    Node* newNode = createNode(id, nama);
+    if (queue->rear == NULL) {
+        queue->front = queue->rear = newNode;
     } else {
-        q->rear->next = newNode;
-        q->rear = newNode;
+        queue->rear->next = newNode;
+        queue->rear = newNode;
     }
     printf("Nasabah dengan ID %d dan nama %s telah ditambahkan ke antrian.\n", id, nama);
 }
 
 // fungsi deQueue - Nasabah selesai dilayani
-Node* deQueue(Queue *q) {
-    if (q->front == NULL) {
+Node* deQueue(Queue* queue) {
+    if (queue->front == NULL) {
         printf("Antrian kosong. Tidak ada Nasabah yang dilayani.\n");
         return NULL;
     }
 
-    Node* temp = q->front;
-    q->front = q->front->next;
+    Node* temp = queue->front;
+    queue->front = queue->front->next;
 
-    if (q->front == NULL) {
-        q->rear = NULL;
+    if (queue->front == NULL) {
+        queue->rear = NULL;
     }
 
     temp->next = NULL;
@@ -100,12 +101,12 @@ Node* deQueue(Queue *q) {
 }
 
 // fungsi printQueue - tampilkan antrian Nasabah
-void printQueue(Queue *q) {
-    if (q->front == NULL) {
+void printQueue(Queue* queue) {
+    if (queue->front == NULL) {
         printf("Antrian kosong.\n");
         return;
     }
-    Node* temp = q->front;
+    Node* temp = queue->front;
     printf("Daftar antrian Nasabah:\n");
     while (temp != NULL) {
         printf("ID: %d, Nama: %s\n", temp->id, temp->nama);
@@ -114,29 +115,29 @@ void printQueue(Queue *q) {
 }
 
 // fungsi initStack
-void initStack(Stack *s) {
-    s->top = NULL;
+void initStack(Stack* stack) {
+    stack->top = NULL;
 }
 
 // fungsi push Stack
-void push(Stack *s, Node *nasabah) {
+void push(Stack* stack, Node* nasabah) {
     if (nasabah == NULL) {
         return;
     }
 
-    nasabah->next = s->top;
-    s->top = nasabah;
+    nasabah->next = stack->top;
+    stack->top = nasabah;
     printf("Nasabah dengan ID %d dan nama %s telah ditambahkan ke riwayat pelayanan (Stack).\n", nasabah->id, nasabah->nama);
 }
 
 // fungsi pop Stack
-Node* pop(Stack *s) {
-    if (s->top == NULL) {
+Node* pop(Stack* stack) {
+    if (stack->top == NULL) {
         printf("Riwayat pelayanan kosong.\n");
         return NULL;
     }
-    Node* temp = s->top;
-    s->top = s->top->next;
+    Node* temp = stack->top;
+    stack->top = stack->top->next;
     temp->next = NULL;
     printf("Nasabah dengan ID %d dan nama %s dihapus dari riwayat pelayanan (Stack).\n", temp->id, temp->nama);
     free(temp);
@@ -144,12 +145,12 @@ Node* pop(Stack *s) {
 }
 
 // fungsi printStack - tampilkan data Stack
-void printStack(Stack *s) {
-    if (s->top == NULL) {
+void printStack(Stack* stack) {
+    if (stack->top == NULL) {
         printf("Riwayat pelayanan kosong.\n");
         return;
     }
-    Node* temp = s->top;
+    Node* temp = stack->top;
     printf("Riwayat pelayanan Nasabah hari ini:\n");
     while (temp != NULL) {
         printf("ID: %d, Nama: %s\n", temp->id, temp->nama);
@@ -173,12 +174,12 @@ void printDoubleLinkedList(DoubleNode* head) {
 
 // fungsi main
 int main() {
-    Queue q;
-    Stack s;
-    DoubleNode* kemarin = initStaticDoubleLinkedList(); // Data statis Nasabah kemarin
+    Queue queue;
+    Stack stack;
+    DoubleNode* kemarin = initStaticDoubleLinkedList();  // Data statis Nasabah kemarin
 
-    initQueue(&q);
-    initStack(&s);
+    initQueue(&queue);
+    initStack(&stack);
 
     int choice, id;
     char nama[50];
@@ -186,6 +187,7 @@ int main() {
     printf("Selamat Datang di Sistem Administrasi Teller Bank Sejahtera\n");
 
     do {
+        system("cls");
         printf("\n===== OPSI MENU ADMINISTRASI =====\n");
         printf("1. Tambahkan Nasabah ke antrian\n");
         printf("2. Layani Nasabah\n");
@@ -205,19 +207,22 @@ int main() {
                 printf("Masukkan Nama Nasabah: ");
                 fgets(nama, sizeof(nama), stdin);
                 nama[strcspn(nama, "\n")] = 0;
-                enQueue(&q, id, nama);
+                enQueue(&queue, id, nama);
+                getch();
                 break;
             }
-            case 2: {//Iqbal
-                Node* nasabahDilayani = deQueue(&q);
-                push(&s, nasabahDilayani);
+            case 2: {  // Iqbal
+                Node* nasabahDilayani = deQueue(&queue);
+                push(&stack, nasabahDilayani);
+                getch();
                 break;
             }
             case 3:
-                printQueue(&q);
+                printQueue(&queue);
+                getch();
                 break;
-            case 4: //tsabit
-                {
+            case 4:  // tsabit
+            {
                 int riwayatPilihan;
                 printf("Silahkan pilih riwayat transaksi yang ingin ditampilkan:\n");
                 printf("1. Hari ini (Stack)\n");
@@ -227,22 +232,24 @@ int main() {
 
                 switch (riwayatPilihan) {
                     case 1:
-                        printStack(&s);
+                        printStack(&stack);
                         break;
                     case 2:
                         printDoubleLinkedList(kemarin);
                         break;
                     case 3:
-                        printStack(&s);
+                        printStack(&stack);
                         printDoubleLinkedList(kemarin);
                         break;
                     default:
                         printf("Pilihan tidak valid!\n");
                 }
+                getch();
                 break;
             }
-            case 5: // rama
-                pop(&s);
+            case 5:  // rama
+                pop(&stack);
+                getch();
                 break;
             case 6:
                 printf("Terimakasih telah menggunakan sistem administrasi Teller\n");
